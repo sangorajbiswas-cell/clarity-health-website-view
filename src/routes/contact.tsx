@@ -30,7 +30,7 @@ export const enquirySchema = z.object({
 
 type Errors = Partial<Record<keyof z.infer<typeof enquirySchema>, string>>;
 
-function Field({ label, name, error, children }: { label: string; name: string; error?: string; children: React.ReactNode }) {
+function Field({ label, name, error, children }: { label: string; name: string; error?: string | undefined; children: React.ReactNode }) {
   return (
     <div>
       <label htmlFor={name} className="mb-1 block font-semibold">{label}</label>
