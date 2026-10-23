@@ -48,7 +48,7 @@ function Contact() {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const raw = Object.fromEntries(fd) as Record<string, string>;
-    const parsed = enquirySchema.safeParse({ ...raw, consent: raw.consent === "on" });
+    const parsed = enquirySchema.safeParse({ ...raw, consent: raw["consent"] === "on" });
     if (!parsed.success) {
       const errs: Errors = {};
       for (const i of parsed.error.issues) errs[i.path[0] as keyof Errors] ??= i.message;
