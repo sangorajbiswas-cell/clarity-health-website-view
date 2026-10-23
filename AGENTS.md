@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Public site content lives in src/content/site.ts until the database is connected; then move it to database tables managed from /admin. Why: one editable source, no invented claims in components.
