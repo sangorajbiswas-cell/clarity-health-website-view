@@ -63,6 +63,7 @@ export function Footer() {
         <div className="text-sm opacity-70">
           <p>All prices on this site are indicative estimates and subject to site inspection.</p>
           <p className="mt-2">© {new Date().getFullYear()} {site.name}</p>
+          <p className="mt-2"><Link to="/admin" className="underline-offset-4 hover:underline">Admin login</Link></p>
         </div>
       </div>
     </footer>
