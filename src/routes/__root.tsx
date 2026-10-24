@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  useRouterState,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
@@ -87,7 +88,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Source+Sans+3:wght@400;600&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Source+Sans+3:wght@400;600&display=swap",
+      },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -114,16 +118,19 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const isAdminRoute = useRouterState({ select: (state) => state.location.pathname === "/admin" });
 
   return (
     <QueryClientProvider client={queryClient}>
-      <a href="#main" className="sr-only focus:not-sr-only">Skip to content</a>
-      <Header />
+      <a href="#main" className="sr-only focus:not-sr-only">
+        Skip to content
+      </a>
+      {!isAdminRoute ? <Header /> : null}
       <main id="main">
         <Outlet />
       </main>
-      <Footer />
-      <MobileCtaBar />
+      {!isAdminRoute ? <Footer /> : null}
+      {!isAdminRoute ? <MobileCtaBar /> : null}
     </QueryClientProvider>
   );
 }
