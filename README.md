@@ -1,24 +1,30 @@
-# BuildTrust Construction Website
+# IRON DISTRICT
 
-Build a production-minded, mobile-first construction company website for BuildTrust Constructions. Main goal: build trust and generate qualified construction project enquiries. Use a premium, trustworthy visual style with warm off-white backgrounds, deep charcoal/navy text, construction orange accents, strong typography, real-estate/construction photography, responsive layout and accessible interactions. Pages: Home, Services, Projects (filters for completed/ongoing and categories), About, Contact/Request a Quote. Include portfolio project detail views with image galleries, services and indicative pricing/rate guidance clearly marked as estimates subject to site inspection, experience/company stats only as editable content (do not invent verified claims), testimonials only as editable content (do not fabricate real reviews; use clearly labeled sample placeholders until replaced), prominent click-to-call and WhatsApp CTAs, and a useful quotation enquiry form with validation and consent. Build a secure admin dashboard at /admin with Supabase email/password sign-in, admin-only access, CRUD management for projects, project photos, services, testimonials, site content/settings/contact details, and enquiries (view/status updates). Store uploaded images in Supabase Storage. Use the already existing Supabase project named 'buildtrust Construction' (project ref nbanjzzgooqddqtxqmwg) if integration permits; do not create another Supabase project. Inspect the existing schema first and adapt to existing tables where possible; avoid destructive changes. If schema additions are needed, propose/apply only minimal safe migrations with RLS and secure policies. Never expose service-role secrets in client code; use only publishable/anon client key. Seed no fake customer enquiries or false business claims. Add setup instructions for creating the first admin securely and environment variable names. Ensure build/type checks pass. I am a beginner, so make the app easy to operate from the admin panel. After building, provide the preview URL and any required connection/setup steps. Do not deploy to paid services or purchase anything.
+A responsive gym website and no-auth demo admin workspace, built on the existing TanStack Start app.
 
-This project was built with [Lovable](https://lovable.dev).
+## What’s included
 
-## Build with Lovable
+- Public home, workout programs, weekly schedule, story, memberships, offers, facilities/gallery, and first-visit request pages.
+- Responsive navigation, class filters, weekly schedule selector, and validated visit-request form.
+- Open demo admin at `/admin` with direct sections at `/admin/programs`, `/admin/trainers`, `/admin/memberships`, `/admin/offers`, `/admin/facilities`, `/admin/gallery`, `/admin/enquiries`, and `/admin/settings`.
+- Demo admin changes persist in this browser's `localStorage` and immediately update the public catalog. Sample records are fictional and do not connect to a membership or payment system.
+- The original Supabase portfolio manager remains available in the admin’s **Portfolio tools** section.
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/0b76762f-3f65-42be-85e7-a0b7f3f890d3).
+## Run locally
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
-## Development
-
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+The project uses the existing package scripts and dependencies:
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+npm install
 npm run dev
 ```
+
+Open the local URL printed by Vite. Validate with `npm test`, `npm run lint`, and `npm run build`.
+
+The demo gym website and admin do not require authentication or a database. The retained portfolio tools use the existing Supabase configuration (`VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env.local`).
+
+## Demo behavior
+
+The admin is public and deliberately has no sign-in, authentication, or access control. Its sample data and enquiries submitted through the demo form are stored only in this browser's `localStorage`, which is browser-specific demo storage and is not suitable for real customer or sensitive information. Use **Reset demo data** in the admin header to restore the initial examples. Enquiry submission saves a fictional demo record locally and offers an optional WhatsApp handoff; it is not connected to a customer database.
+
+Public copy, contact details, and initial program, offer, facility, gallery, trainer, schedule, and plan examples are maintained in `src/content/site.ts` and the typed demo catalog. All supplied gym details, pricing, imagery, trainers, profiles, and offers are illustrative. This public admin demo is not production-secure. Verify and replace sample content and contact details before publishing.

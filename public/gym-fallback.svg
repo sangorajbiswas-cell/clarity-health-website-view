@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#171916"/>
+  <path d="M470 330v140m-62-105v70m124-70v70m-168-48h44m124 0h44" fill="none" stroke="#b8f34a" stroke-linecap="round" stroke-width="24"/>
+  <text x="600" y="550" fill="#f3f4ef" font-family="Arial,sans-serif" font-size="32" text-anchor="middle" letter-spacing="8">IRON DISTRICT</text>
+</svg>

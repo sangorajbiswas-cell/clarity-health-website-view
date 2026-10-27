@@ -1,168 +1,113 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { GymDemoDataProvider } from "@/components/GymDemoDataProvider";
+import { GymCatalog } from "@/components/admin/GymCatalog";
+import { useGymDemoData } from "@/hooks/use-gym-demo-data";
+import { gymDemoStorageKey } from "@/lib/gym-data";
 
-const { getSupabaseClientMock } = vi.hoisted(() => ({
-  getSupabaseClientMock: vi.fn(),
-}));
-
-vi.mock("@/lib/supabase", () => ({
-  getSupabaseClient: getSupabaseClientMock,
-  SupabaseConfigurationError: class SupabaseConfigurationError extends Error {},
-}));
-
-import { AdminPage } from "@/routes/admin";
-
-const session: Session = {
-  access_token: "test-access-token",
-  refresh_token: "test-refresh-token",
-  token_type: "bearer",
-  expires_in: 3600,
-  expires_at: 1792861200,
-  user: {
-    id: "test-admin-user",
-    aud: "authenticated",
-    role: "authenticated",
-    email: "admin@example.test",
-    app_metadata: { provider: "email", providers: ["email"] },
-    user_metadata: {},
-    created_at: "2026-10-24T00:00:00.000Z",
-    updated_at: "2026-10-24T00:00:00.000Z",
-  },
-};
-
-function createClientMock(
-  currentSession: Session | null,
-  membership: { user_id: string } | null,
-  membershipError: Error | null = null,
-  signInSession: Session | null = currentSession,
-) {
-  let authListener: ((event: AuthChangeEvent, session: Session | null) => void) | undefined;
-  const maybeSingle = vi.fn().mockResolvedValue({ data: membership, error: membershipError });
-  const eq = vi.fn().mockReturnValue({ maybeSingle });
-  const select = vi.fn().mockReturnValue({ eq });
-  const projectQuery = {
-    select: vi.fn(),
-    order: vi.fn().mockResolvedValue({ data: [], error: null }),
-  };
-  projectQuery.select.mockReturnValue(projectQuery);
-  const client = {
-    auth: {
-      getSession: vi.fn().mockResolvedValue({ data: { session: currentSession }, error: null }),
-      onAuthStateChange: vi.fn((callback: typeof authListener) => {
-        authListener = callback;
-        return { data: { subscription: { unsubscribe: vi.fn() } } };
-      }),
-      signInWithPassword: vi.fn(async () => {
-        authListener?.("SIGNED_IN", signInSession);
-        return {
-          data: { session: signInSession, user: signInSession?.user ?? null },
-          error: null,
-        };
-      }),
-      signOut: vi.fn().mockResolvedValue({ error: null }),
-    },
-    from: vi.fn((table: string) => (table === "admins" ? { select } : projectQuery)),
-  };
-
-  return { client, maybeSingle };
+function PublicCatalogProbe() {
+  const { data } = useGymDemoData();
+  return (
+    <output aria-label="Public program list">
+      {data.programs.map((program) => program.title).join(", ")}
+    </output>
+  );
 }
 
-describe("admin authentication and authorization", () => {
+function renderCatalog(
+  kind: "programs" | "trainers" | "plans" | "offers" | "facilities" | "gallery",
+) {
+  return render(
+    <GymDemoDataProvider>
+      <GymCatalog kind={kind} />
+      <PublicCatalogProbe />
+    </GymDemoDataProvider>,
+  );
+}
+
+describe("shared gym demo catalog", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    window.localStorage.clear();
+    vi.stubGlobal(
+      "confirm",
+      vi.fn(() => true),
+    );
   });
 
   afterEach(() => {
     cleanup();
+    vi.unstubAllGlobals();
   });
 
-  it("shows protected admin state only after membership is verified", async () => {
-    const { client, maybeSingle } = createClientMock(session, { user_id: session.user.id });
-    getSupabaseClientMock.mockReturnValue(client);
-
-    render(<AdminPage />);
-
-    expect(await screen.findByText(/administrator access verified/i)).toBeInTheDocument();
-    expect(client.from).toHaveBeenCalledWith("admins");
-    expect(maybeSingle).toHaveBeenCalled();
-  });
-
-  it("denies an authenticated user without an admins membership row", async () => {
-    const { client } = createClientMock(session, null);
-    getSupabaseClientMock.mockReturnValue(client);
-
-    render(<AdminPage />);
-
-    expect(await screen.findByText(/not an authorized administrator/i)).toBeInTheDocument();
-    expect(screen.queryByText(/administrator access verified/i)).not.toBeInTheDocument();
-  });
-
-  it("signs in with email and password and then checks membership", async () => {
-    const { client } = createClientMock(null, { user_id: session.user.id }, null, session);
-    getSupabaseClientMock.mockReturnValue(client);
-
-    render(<AdminPage />);
-    fireEvent.change(await screen.findByLabelText("Email"), {
-      target: { value: "admin@example.test" },
+  it("creates and immediately publishes a program, then persists it across refresh", async () => {
+    const firstRender = renderCatalog("programs");
+    fireEvent.click(await screen.findByRole("button", { name: "Add program" }));
+    fireEvent.change(screen.getByLabelText("Program name"), { target: { value: "Demo Mobility" } });
+    fireEvent.change(screen.getByLabelText("Description"), {
+      target: { value: "An illustrative movement session." },
     });
-    fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "test-password" },
+    fireEvent.change(screen.getByLabelText("Program type"), { target: { value: "Mobility" } });
+    fireEvent.change(screen.getByLabelText("Session length"), { target: { value: "40 min" } });
+    fireEvent.change(screen.getByLabelText("Lead trainer"), { target: { value: "Demo Coach" } });
+    fireEvent.change(screen.getByLabelText("Experience level"), {
+      target: { value: "All levels" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create program" }));
 
-    expect(await screen.findByText(/administrator access verified/i)).toBeInTheDocument();
-    expect(client.auth.signInWithPassword).toHaveBeenCalledWith({
-      email: "admin@example.test",
-      password: "test-password",
+    expect(await screen.findByText("Demo Mobility")).toBeInTheDocument();
+    expect(screen.getByLabelText("Public program list")).toHaveTextContent("Demo Mobility");
+    await waitFor(() => {
+      expect(window.localStorage.getItem(gymDemoStorageKey)).toContain("Demo Mobility");
     });
+
+    firstRender.unmount();
+    renderCatalog("programs");
+    expect(await screen.findByText("Demo Mobility")).toBeInTheDocument();
   });
 
-  it("fails closed when membership verification returns an error", async () => {
-    const { client } = createClientMock(session, null, new Error("Membership query denied"));
-    getSupabaseClientMock.mockReturnValue(client);
-
-    render(<AdminPage />);
-
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      /unable to verify administrator membership/i,
-    );
-    expect(screen.queryByText(/administrator access verified/i)).not.toBeInTheDocument();
+  it("edits and deletes an offer with confirmation", async () => {
+    renderCatalog("offers");
+    await screen.findByText("First visit is on us");
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.change(screen.getByLabelText("Offer title"), {
+      target: { value: "Updated demo offer" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
+    expect(await screen.findByText("Updated demo offer")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Delete" }));
+    expect(await screen.findByText("No offers & promotions yet")).toBeInTheDocument();
+    expect(window.confirm).toHaveBeenCalled();
   });
 
-  it("shows the dashboard sections without claiming unsupported backend features", async () => {
-    const { client } = createClientMock(session, { user_id: session.user.id });
-    getSupabaseClientMock.mockReturnValue(client);
-
-    render(<AdminPage />);
-
-    expect(await screen.findByRole("heading", { name: "Welcome back" })).toBeInTheDocument();
-    expect(screen.getByRole("navigation", { name: "Admin sections" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Enquiries" }));
-    expect(await screen.findByRole("heading", { name: "Enquiries", level: 2 })).toBeInTheDocument();
-    expect(screen.getByText("Not implemented yet")).toBeInTheDocument();
-    expect(screen.getByText(/does not store enquiries in the database/i)).toBeInTheDocument();
+  it("creates trainer records in the persisted shared catalog", async () => {
+    renderCatalog("trainers");
+    fireEvent.click(await screen.findByRole("button", { name: "Add trainer" }));
+    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Demo Trainer" } });
+    fireEvent.change(screen.getByLabelText("Specialty / role"), { target: { value: "Strength" } });
+    fireEvent.change(screen.getByLabelText("Experience"), { target: { value: "3 years" } });
+    fireEvent.change(screen.getByLabelText("Specialties (comma separated)"), {
+      target: { value: "Strength, mobility" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Create trainer" }));
+    expect(await screen.findByText("Demo Trainer")).toBeInTheDocument();
+    expect(window.localStorage.getItem(gymDemoStorageKey)).toContain("Demo Trainer");
   });
 
-  it("opens project management and shows an empty database state", async () => {
-    const { client } = createClientMock(session, { user_id: session.user.id });
-    getSupabaseClientMock.mockReturnValue(client);
-
-    render(<AdminPage />);
-
-    expect(await screen.findByRole("heading", { name: "Welcome back" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Projects" }));
-
-    expect(
-      await screen.findByText(
-        "Create, update, and publish the projects shown on your public website.",
-      ),
-    ).toBeInTheDocument();
-    expect(await screen.findByText("No database projects yet")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /add project/i })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /add project/i }));
-    const saveButton = screen.getByRole("button", { name: /save project/i });
-    fireEvent.submit(saveButton.closest("form")!);
-    expect(await screen.findByRole("alert")).toHaveTextContent(/enter a project title/i);
+  it("creates a membership with sample pricing and billing period", async () => {
+    renderCatalog("plans");
+    fireEvent.click(await screen.findByRole("button", { name: "Add membership" }));
+    fireEvent.change(screen.getByLabelText("Plan name"), { target: { value: "Sample Monthly" } });
+    fireEvent.change(screen.getByLabelText("Price"), { target: { value: "₹1,999" } });
+    fireEvent.change(screen.getByLabelText("Billing period"), { target: { value: "/ month" } });
+    fireEvent.change(screen.getByLabelText("Description"), {
+      target: { value: "Illustrative plan." },
+    });
+    fireEvent.change(screen.getByLabelText("Features (comma separated)"), {
+      target: { value: "Open gym, locker" },
+    });
+    fireEvent.click(screen.getByRole("combobox", { name: "Recommended? (yes/no)" }));
+    fireEvent.click(await screen.findByRole("option", { name: "No" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create membership" }));
+    expect(await screen.findByText("Sample Monthly")).toBeInTheDocument();
   });
 });

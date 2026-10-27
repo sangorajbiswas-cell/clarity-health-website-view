@@ -11,8 +11,11 @@ export const Route = createFileRoute("/projects/$slug")({
   },
   head: () => ({
     meta: [
-      { title: "Project details — BuildTrust Constructions" },
-      { name: "description", content: "Explore a BuildTrust Constructions project." },
+      { title: "Inside the district — IRON DISTRICT" },
+      {
+        name: "description",
+        content: "Take a closer look inside the IRON DISTRICT training space.",
+      },
     ],
   }),
   notFoundComponent: () => (

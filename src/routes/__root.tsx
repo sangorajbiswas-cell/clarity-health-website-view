@@ -14,6 +14,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Footer, Header, MobileCtaBar } from "@/components/SiteChrome";
+import { SiteContentProvider } from "@/components/SiteContentProvider";
+import { GymDemoDataProvider } from "@/components/GymDemoDataProvider";
 
 function NotFoundComponent() {
   return (
@@ -80,8 +82,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "BuildTrust Constructions" },
-      { name: "description", content: "Residential, commercial and renovation construction." },
+      { title: "IRON DISTRICT — Find your strong" },
+      {
+        name: "description",
+        content: "A neighborhood training ground for strength, movement, and showing up.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -90,7 +95,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Source+Sans+3:wght@400;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap",
       },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
@@ -118,19 +123,25 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const isAdminRoute = useRouterState({ select: (state) => state.location.pathname === "/admin" });
+  const isAdminRoute = useRouterState({
+    select: (state) => state.location.pathname.startsWith("/admin"),
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
-      <a href="#main" className="sr-only focus:not-sr-only">
-        Skip to content
-      </a>
-      {!isAdminRoute ? <Header /> : null}
-      <main id="main">
-        <Outlet />
-      </main>
-      {!isAdminRoute ? <Footer /> : null}
-      {!isAdminRoute ? <MobileCtaBar /> : null}
+      <SiteContentProvider>
+        <GymDemoDataProvider>
+          <a href="#main" className="sr-only focus:not-sr-only">
+            Skip to content
+          </a>
+          {!isAdminRoute ? <Header /> : null}
+          <main id="main">
+            <Outlet />
+          </main>
+          {!isAdminRoute ? <Footer /> : null}
+          {!isAdminRoute ? <MobileCtaBar /> : null}
+        </GymDemoDataProvider>
+      </SiteContentProvider>
     </QueryClientProvider>
   );
 }
