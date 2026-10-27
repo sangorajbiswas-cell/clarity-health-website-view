@@ -1,9 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { GymAdmin } from "@/components/admin/GymAdmin";
+import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
+import { ClinicAdmin } from "@/components/admin/ClinicAdmin";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
-    meta: [{ title: "Demo Admin — IRON DISTRICT" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Demo Admin — CLARITY HEALTH" }, { name: "robots", content: "noindex" }],
   }),
-  component: GymAdmin,
+  component: AdminRoute,
 });
+
+function AdminRoute() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  return pathname === "/admin" ? <ClinicAdmin /> : <Outlet />;
+}

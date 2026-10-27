@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { MapPin } from "lucide-react";
-import { projects, type Project } from "@/content/site";
+import { projects, type Project } from "@/content/legacy-gym-site";
 import { CtaBand } from "@/components/SiteChrome";
 import { listProjects } from "@/lib/projects";
 
@@ -11,10 +11,10 @@ export const Route = createFileRoute("/projects/$slug")({
   },
   head: () => ({
     meta: [
-      { title: "Inside the district — IRON DISTRICT" },
+      { title: "Project details — portfolio demo" },
       {
         name: "description",
-        content: "Take a closer look inside the IRON DISTRICT training space.",
+        content: "Explore a sample project gallery from the existing project tools.",
       },
     ],
   }),

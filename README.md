@@ -1,30 +1,31 @@
-# IRON DISTRICT
+# CLARITY HEALTH
 
-A responsive gym website and no-auth demo admin workspace, built on the existing TanStack Start app.
+A fictional clinic website and publicly accessible demo admin, built on the existing TanStack Start application.
 
-## What’s included
+## What is included
 
-- Public home, workout programs, weekly schedule, story, memberships, offers, facilities/gallery, and first-visit request pages.
-- Responsive navigation, class filters, weekly schedule selector, and validated visit-request form.
-- Open demo admin at `/admin` with direct sections at `/admin/programs`, `/admin/trainers`, `/admin/memberships`, `/admin/offers`, `/admin/facilities`, `/admin/gallery`, `/admin/enquiries`, and `/admin/settings`.
-- Demo admin changes persist in this browser's `localStorage` and immediately update the public catalog. Sample records are fictional and do not connect to a membership or payment system.
-- The original Supabase portfolio manager remains available in the admin’s **Portfolio tools** section.
+- Public home, doctors, services, departments, facilities, about, contact, and appointment-request pages.
+- Direct admin access at `/admin`, with working pages for doctors, services, departments, facilities, appointment requests, website content, and clinic information.
+- Existing Supabase project tools remain separately available at `/admin/portfolio`.
+- Create, edit, and delete actions for illustrative doctors, services, departments, facilities, and sample quotes.
+- Appointment-request search, status filtering, detail viewing, and status updates. A request is not a booking or confirmation.
+- Public and admin screens share typed demo content. Changes are saved in the current browser's `localStorage` and immediately appear on public pages.
+- Existing Supabase project-management code and configuration are retained; clinic demo data does not require the Supabase backend.
 
 ## Run locally
-
-The project uses the existing package scripts and dependencies:
 
 ```sh
 npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. Validate with `npm test`, `npm run lint`, and `npm run build`.
+Use the local URL printed by Vite. Existing validation scripts include `npm test`, `npm run lint`, and `npm run build`.
+The separate `/admin/portfolio` tool uses the existing `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` configuration when set; clinic demo content itself does not connect to Supabase.
 
-The demo gym website and admin do not require authentication or a database. The retained portfolio tools use the existing Supabase configuration (`VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env.local`).
+## Privacy and demo limitations
 
-## Demo behavior
+This is an unauthenticated, publicly accessible frontend demonstration. The admin panel is not protected and is not production-secure. Demo content is stored only in the current browser's `localStorage`; it is browser-specific, can be cleared by the browser, and is not shared with other users or devices.
 
-The admin is public and deliberately has no sign-in, authentication, or access control. Its sample data and enquiries submitted through the demo form are stored only in this browser's `localStorage`, which is browser-specific demo storage and is not suitable for real customer or sensitive information. Use **Reset demo data** in the admin header to restore the initial examples. Enquiry submission saves a fictional demo record locally and offers an optional WhatsApp handoff; it is not connected to a customer database.
+All clinic, doctor, facility, and quote content is fictional and illustrative. The example contact details use reserved sample values. Public appointment submissions are only demo requests saved in local browser storage; they do not reach a clinic, check availability, or confirm an appointment. Do not enter real patient details, medical histories, symptoms, diagnoses, or other sensitive information. This project is not suitable for real patient management or medical care.
 
-Public copy, contact details, and initial program, offer, facility, gallery, trainer, schedule, and plan examples are maintained in `src/content/site.ts` and the typed demo catalog. All supplied gym details, pricing, imagery, trainers, profiles, and offers are illustrative. This public admin demo is not production-secure. Verify and replace sample content and contact details before publishing.
+Use **Clinic information → Reset all demo content** to restore the initial examples for this browser.

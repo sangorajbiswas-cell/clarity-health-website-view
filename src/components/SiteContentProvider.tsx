@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { site } from "@/content/site";
+import { site } from "@/content/legacy-gym-site";
 import {
   SiteContentContext,
   defaultSiteContent,

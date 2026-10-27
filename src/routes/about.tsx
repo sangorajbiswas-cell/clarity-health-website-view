@@ -1,150 +1,104 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, HeartHandshake, MoveUpRight, Sparkles } from "lucide-react";
+import { ArrowUpRight, HeartHandshake, Leaf, Sparkles } from "lucide-react";
+import { ClinicImage } from "@/components/ClinicImage";
 import { CtaBand } from "@/components/SiteChrome";
-import { ImageWithFallback } from "@/components/ImageWithFallback";
-import { publicCopy, siteImages } from "@/content/site";
-import { useGymDemoData } from "@/hooks/use-gym-demo-data";
-import { useSiteContent } from "@/hooks/use-site-content";
+import { clinicImages } from "@/content/site";
+import { useClinicDemoData } from "@/hooks/use-clinic-demo-data";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "Our story — IRON DISTRICT" },
-      { name: "description", content: publicCopy.aboutPage.description },
+      { title: "About CLARITY HEALTH — A clinic website demo" },
+      {
+        name: "description",
+        content:
+          "Learn about the fictional CLARITY HEALTH website demonstration and its illustrative care philosophy.",
+      },
     ],
   }),
   component: About,
 });
 
-const valueIcons = [HeartHandshake, Sparkles, MoveUpRight];
-
 function About() {
-  const { data } = useGymDemoData();
-  const { content } = useSiteContent();
-  const trainers = data.trainers;
+  const { data } = useClinicDemoData();
+  const values = [
+    {
+      icon: HeartHandshake,
+      title: "Human conversations",
+      description: "Use clear, welcoming language and leave room for questions.",
+    },
+    {
+      icon: Leaf,
+      title: "A gentler experience",
+      description: "Thoughtful details can make a clinic website easier to approach.",
+    },
+    {
+      icon: Sparkles,
+      title: "Clarity at each step",
+      description: "Explain what a request does—and what it does not do.",
+    },
+  ];
   return (
     <>
-      <section className="relative overflow-hidden bg-ink px-5 py-20 text-white sm:px-8 sm:py-28 lg:px-12">
-        <div className="absolute -bottom-16 -right-4 select-none font-display text-[36vw] font-bold leading-none tracking-[-0.1em] text-white/[0.035]">
-          ID
-        </div>
-        <div className="relative mx-auto max-w-[1440px]">
-          <p className="section-kicker !text-primary">{publicCopy.aboutPage.heroEyebrow}</p>
-          <h1 className="mt-4 max-w-5xl font-display text-6xl font-bold leading-[0.88] tracking-[-0.08em] sm:text-8xl">
-            {publicCopy.aboutPage.headline}
+      <section className="bg-forest-950 text-white">
+        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-24 lg:px-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sage-200">
+            A fictional clinic experience
+          </p>
+          <h1 className="mt-4 max-w-4xl font-display text-5xl font-semibold leading-tight tracking-tight sm:text-7xl">
+            A clearer way to introduce care.
           </h1>
-          <p className="mt-8 max-w-lg text-base leading-7 text-white/60">
-            {publicCopy.aboutPage.description}
+          <p className="mt-6 max-w-2xl text-sm leading-7 text-white/75 sm:text-base">
+            CLARITY HEALTH is a demonstration website, not a real clinic. It shows how clear
+            information, warm design, and honest expectations can work together in a healthcare
+            experience.
           </p>
         </div>
       </section>
-
-      <section className="mx-auto grid max-w-[1440px] gap-10 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:gap-20 lg:px-12">
+      <section className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-2 lg:items-center lg:px-10">
         <div>
-          <p className="section-kicker">{publicCopy.aboutPage.storyEyebrow}</p>
-          <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold leading-[0.96] tracking-[-0.065em] sm:text-6xl">
-            {publicCopy.aboutPage.storyTitle}
+          <p className="section-kicker">Our example approach</p>
+          <h2 className="mt-3 font-display text-4xl font-semibold leading-tight tracking-tight text-forest-950 sm:text-5xl">
+            {data.home.aboutTitle}
           </h2>
-          <div className="mt-6 max-w-xl space-y-4 text-sm leading-6 text-ink/60 sm:text-base">
-            {publicCopy.aboutPage.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-          <Link to="/services" className="mt-7 inline-flex items-center gap-2 text-sm font-bold">
-            {publicCopy.aboutPage.storyLink} <ArrowRight size={17} />
+          <p className="mt-5 max-w-xl text-sm leading-7 text-forest-950/70 sm:text-base">
+            {data.home.aboutDescription}
+          </p>
+          <p className="mt-4 max-w-xl text-sm leading-7 text-forest-950/70">
+            The names, clinician profiles, services, clinic details, sample requests, and quotations
+            throughout this site are invented for a frontend demonstration. No patient data, medical
+            history, or diagnosis is collected.
+          </p>
+          <Link to="/services" className="btn btn-forest mt-6 w-fit">
+            Explore sample services <ArrowUpRight size={16} aria-hidden />
           </Link>
         </div>
-        <div className="relative min-h-[420px] overflow-hidden bg-ink">
-          <ImageWithFallback
-            src={siteImages.story}
-            alt={publicCopy.aboutPage.imageAlt}
-            loading="lazy"
+        <div className="relative min-h-[350px] overflow-hidden rounded-[1.5rem] sm:min-h-[480px]">
+          <ClinicImage
+            src={clinicImages.consultation}
+            alt="Illustrative healthcare consultation stock photo"
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/55 to-transparent" />
-          <div className="absolute bottom-5 left-5 flex items-center gap-3 text-white sm:bottom-8 sm:left-8">
-            <span className="flex size-11 items-center justify-center bg-primary text-ink">
-              <Sparkles size={20} />
-            </span>
-            <p className="font-display text-sm font-bold">{publicCopy.aboutPage.imageCaption}</p>
+          <div className="absolute bottom-4 left-4 rounded-xl bg-white/95 px-4 py-3 text-xs font-semibold text-forest-950">
+            Stock imagery · fictional clinic demo
           </div>
         </div>
       </section>
-
-      <section className="bg-primary">
-        <div className="mx-auto grid max-w-[1440px] gap-8 px-5 py-12 sm:px-8 md:grid-cols-3 lg:px-12">
-          {publicCopy.aboutPage.values.map((item, index) => {
-            const Icon = valueIcons[index] ?? Sparkles;
-            return (
-              <article key={item.title} className="border-t border-ink/20 pt-5">
-                <Icon size={22} strokeWidth={1.8} />
-                <h2 className="mt-5 font-display text-xl font-bold tracking-[-0.04em]">
-                  {item.title}
-                </h2>
-                <p className="mt-2 max-w-sm text-sm leading-6 text-ink/65">{item.description}</p>
+      <section className="bg-sage-100/70">
+        <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-18 lg:px-10">
+          <p className="section-kicker">What this example values</p>
+          <h2 className="mt-3 font-display text-3xl font-semibold text-forest-950 sm:text-4xl">
+            Design that respects the person.
+          </h2>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {values.map(({ icon: Icon, title, description }) => (
+              <article key={title} className="rounded-2xl bg-white p-6">
+                <Icon size={23} className="text-forest-700" aria-hidden />
+                <h3 className="mt-5 font-display text-lg font-semibold text-forest-950">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-forest-950/70">{description}</p>
               </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
-        <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-          <div>
-            <p className="section-kicker">{publicCopy.aboutPage.coachesEyebrow}</p>
-            <h2 className="mt-2 font-display text-4xl font-bold tracking-[-0.065em] sm:text-5xl">
-              {publicCopy.aboutPage.coachesTitle}
-            </h2>
+            ))}
           </div>
-          <p className="max-w-sm text-sm leading-6 text-ink/60">
-            {publicCopy.aboutPage.coachesDescription}
-          </p>
-        </div>
-        <div className="mt-9 grid gap-5 sm:grid-cols-3">
-          {trainers.map((trainer) => (
-            <article key={trainer.name} className="group">
-              <div className="aspect-[4/5] overflow-hidden bg-secondary">
-                <img
-                  src={trainer.image}
-                  alt={trainer.name}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                />
-              </div>
-              <div className="flex items-start justify-between gap-3 border-b border-ink/15 py-4">
-                <div>
-                  <h3 className="font-display text-lg font-bold">{trainer.name}</h3>
-                  <p className="mt-0.5 text-xs text-ink/55">{trainer.role}</p>
-                </div>
-                <span className="mt-1 inline-flex size-8 items-center justify-center border border-ink/15">
-                  <MoveUpRight size={15} />
-                </span>
-              </div>
-              <p className="mt-3 text-xs font-semibold text-ink/50">
-                {trainer.specialties.join(" · ")}
-              </p>
-              <p className="mt-1 text-[11px] text-ink/45">
-                {trainer.experience} · Illustrative profile
-              </p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="border-y border-ink/10 bg-white">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-5 px-5 py-12 sm:px-8 md:flex-row md:items-center md:justify-between lg:px-12">
-          <div>
-            <p className="section-kicker">{publicCopy.aboutPage.visitEyebrow}</p>
-            <h2 className="mt-2 font-display text-2xl font-bold tracking-[-0.05em]">
-              {publicCopy.aboutPage.visitTitle}
-            </h2>
-            <p className="mt-1 text-sm text-ink/55">
-              {content.hours} · {content.address}
-            </p>
-          </div>
-          <Link to="/contact" className="btn btn-ink w-fit">
-            {publicCopy.aboutPage.visitCta} <ArrowRight size={16} />
-          </Link>
         </div>
       </section>
       <CtaBand />

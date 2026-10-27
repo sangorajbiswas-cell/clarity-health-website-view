@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { gymDemoStorageKey, GymDemoDataContext, type GymDemoData } from "@/lib/gym-data";
-import { initialGymDemoData, weeklySchedule } from "@/content/site";
+import { initialGymDemoData, weeklySchedule } from "@/content/legacy-gym-site";
 
 function isGymDemoData(value: unknown): value is GymDemoData {
   if (!value || typeof value !== "object") return false;

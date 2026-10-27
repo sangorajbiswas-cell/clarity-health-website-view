@@ -1,12 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ClinicAdmin } from "@/components/admin/ClinicAdmin";
 
 export const Route = createFileRoute("/admin/$section")({
   head: () => ({
-    meta: [{ title: "Demo Admin — IRON DISTRICT" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Demo Admin — CLARITY HEALTH" }, { name: "robots", content: "noindex" }],
   }),
   component: AdminSectionRoute,
 });
 
 function AdminSectionRoute() {
-  return null;
+  const { section } = Route.useParams();
+  return <ClinicAdmin section={section} />;
 }

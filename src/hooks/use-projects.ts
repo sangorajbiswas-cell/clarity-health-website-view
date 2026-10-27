@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { projects as fallbackProjects, type Project } from "@/content/site";
+import { projects as fallbackProjects, type Project } from "@/content/legacy-gym-site";
 import { listProjects } from "@/lib/projects";
 
 export function usePublishedProjects() {

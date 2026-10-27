@@ -1,4 +1,4 @@
-import type { Project } from "@/content/site";
+import type { Project } from "@/content/legacy-gym-site";
 import { getSupabaseClient } from "@/lib/supabase";
 
 export const projectStatuses = ["completed", "ongoing"] as const;

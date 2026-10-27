@@ -14,4 +14,30 @@ describe("App routing", () => {
 
     expect(matches.at(-1)?.routeId).not.toBe(rootRouteId);
   });
+
+  it("matches directly refreshed clinic and nested admin routes", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+
+    for (const path of [
+      "/",
+      "/doctors",
+      "/services",
+      "/departments",
+      "/about",
+      "/facilities",
+      "/contact",
+      "/appointment",
+      "/admin",
+      "/admin/doctors",
+      "/admin/services",
+      "/admin/departments",
+      "/admin/facilities",
+      "/admin/appointments",
+      "/admin/content",
+      "/admin/settings",
+      "/admin/portfolio",
+    ]) {
+      expect(router.matchRoutes(path).at(-1)?.routeId, path).not.toBe(rootRouteId);
+    }
+  });
 });

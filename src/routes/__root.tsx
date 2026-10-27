@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Footer, Header, MobileCtaBar } from "@/components/SiteChrome";
 import { SiteContentProvider } from "@/components/SiteContentProvider";
 import { GymDemoDataProvider } from "@/components/GymDemoDataProvider";
+import { ClinicDemoDataProvider } from "@/components/ClinicDemoDataProvider";
 
 function NotFoundComponent() {
   return (
@@ -82,10 +83,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "IRON DISTRICT — Find your strong" },
+      { title: "CLARITY HEALTH — Thoughtful care, made easier to navigate" },
       {
         name: "description",
-        content: "A neighborhood training ground for strength, movement, and showing up.",
+        content:
+          "A calm, illustrative clinic website demo with fictional doctors, services, and appointment requests.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -95,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap",
       },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
@@ -131,17 +133,31 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <SiteContentProvider>
         <GymDemoDataProvider>
-          <a href="#main" className="sr-only focus:not-sr-only">
-            Skip to content
-          </a>
-          {!isAdminRoute ? <Header /> : null}
-          <main id="main">
-            <Outlet />
-          </main>
-          {!isAdminRoute ? <Footer /> : null}
-          {!isAdminRoute ? <MobileCtaBar /> : null}
+          <ClinicDemoDataProvider>
+            <a href="#main" className="skip-link">
+              Skip to content
+            </a>
+            {isAdminRoute ? <AdminDashboardLayout /> : <PublicSiteLayout />}
+          </ClinicDemoDataProvider>
         </GymDemoDataProvider>
       </SiteContentProvider>
     </QueryClientProvider>
   );
+}
+
+function PublicSiteLayout() {
+  return (
+    <>
+      <Header />
+      <main id="main">
+        <Outlet />
+      </main>
+      <Footer />
+      <MobileCtaBar />
+    </>
+  );
+}
+
+function AdminDashboardLayout() {
+  return <Outlet />;
 }

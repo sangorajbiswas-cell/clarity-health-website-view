@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import type { Service, Trainer } from "@/content/site";
+import type { Service, Trainer } from "@/content/legacy-gym-site";
 
 export type GymMember = {
   id: string;

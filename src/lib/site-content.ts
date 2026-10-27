@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { site } from "@/content/site";
+import type { site } from "@/content/legacy-gym-site";
 
 export type SiteContent = Pick<
   typeof site,
