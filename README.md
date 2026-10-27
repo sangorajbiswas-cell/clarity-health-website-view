@@ -2,6 +2,14 @@
 
 A fictional clinic website and publicly accessible demo admin, built on the existing TanStack Start application.
 
+## Live demos
+
+- CLARITY HEALTH public website: https://clarity-health-website-view.sangorajbiswas92.workers.dev
+- CLARITY HEALTH demo admin: https://clarity-health-website-view.sangorajbiswas92.workers.dev/admin
+- CLARITY HEALTH source: https://github.com/sangorajbiswas-cell/clarity-health-website-view
+- IRON DISTRICT is hosted separately: https://irondistrict-gym-demo.sangorajbiswas92.workers.dev
+- IRON DISTRICT source: https://github.com/sangorajbiswas-cell/iron-district-gym-website
+
 ## What is included
 
 - Public home, doctors, services, departments, facilities, about, contact, and appointment-request pages.
